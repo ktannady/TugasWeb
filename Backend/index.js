@@ -4,12 +4,21 @@ const port = 3000
 const cors = require('cors')
 const db = require ('./config/database.js')
 
+app.use(express.urlencoded({extended: false})) 
+app.use(express.json());
 app.use(cors());
 
-app.use(express.json());
 
 app.get('/', (req, res) => {  
-  res.send("Welcome");
+  res.send(`
+  <html>
+    <body>
+      <form action='/todo' method='post'>
+        <input name='description'/>
+        <button>Add</button>
+      </form>
+    </body>
+  </html>`)
 })
 
 app.get('/todo', async (req, res) => {  
@@ -36,15 +45,14 @@ function loadAll() {
 }
 
 app.post('/todo', (req, res) =>{
-  // console.log(req.body);
-  db.query("INSERT INTO todo SET ?", [req.body], (err, results) => {             
+  //console.log(req.body);
+  db.query("INSERT INTO todo (description) VALUES (?)", req.body.description, (err, results) => {             
     if(err) {
       console.log(err);        
     } else {
       res.json(results);
     }
   })
-
 })
 
 app.delete('/todo/:id', (req, res) => {
