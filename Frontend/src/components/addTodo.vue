@@ -32,12 +32,18 @@ export default {
   methods: {
     // Create New product
     async addTodo() {
+      const username = localStorage.getItem('usr');
+      const password = localStorage.getItem('pwd');
       try {
-        await axios.post("http://localhost:3000/todo", {
+        await axios.post("http://localhost:3000/todo", 
+        {
           description: this.description,
+        },
+        { 
+          headers: {username, password}
         });        
         this.description = "";
-        this.$router.push("/");
+        this.$router.push("/todo");
       } catch (err) {
         console.log(err);
       }

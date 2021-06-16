@@ -1,6 +1,6 @@
 <template>
   <div>    
-    <router-link :to="{ name: 'Add' }" class="button is-success mt-5">
+    <router-link :to="{ name: 'AddUser' }" class="button is-success mt-5">
       Add New
     </router-link>    
     <table class="table is-striped is-bordered mt-2 is-fullwidth">
@@ -14,13 +14,6 @@
         <tr v-for="todo in todos" :key="todo.id">
           <td>{{ todo.description }}</td>          
           <td class="has-text-centered">
-            <!--
-            <router-link
-              :to="{ name: 'Edit', params: { id: todo.id } }"
-              class="button is-info is-small"
-              >Edit
-            </router-link>
-            -->
             <a
               class="button is-danger is-small"
               @click="deleteTodo(todo.id)"
@@ -53,7 +46,12 @@ export default {
     // Get All Products
     async getTodo() {
       try {
-        const response = await axios.get("http://localhost:3000/todo");
+        const username = localStorage.getItem('usr');
+        const password = localStorage.getItem('pwd');
+        const response = await axios.get("http://localhost:3000/todo", 
+        { 
+          headers: {username, password}
+        });
         this.todos = response.data;
       } catch (err) {
         console.log(err);
@@ -63,7 +61,12 @@ export default {
     // Delete Product
     async deleteTodo(id) {
       try {
-        await axios.delete(`http://localhost:3000/todo/${id}`);
+        const username = localStorage.getItem('usr');
+        const password = localStorage.getItem('pwd');
+        await axios.delete(`http://localhost:3000/todo/${id}`,
+        { 
+          headers: {username, password}
+        });
         this.getTodo();
       } catch (err) {
         console.log(err);
