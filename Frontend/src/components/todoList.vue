@@ -1,6 +1,6 @@
 <template>
   <div>    
-    <router-link :to="{ name: 'AddUser' }" class="button is-success mt-5">
+    <router-link :to="{ name: 'AddTodo' }" class="button is-success mt-5">
       Add New
     </router-link>    
     <table class="table is-striped is-bordered mt-2 is-fullwidth">
@@ -35,10 +35,16 @@ export default {
   data() {
     return {
       todos: [],
+      socket: io('http://localhost:3000')
     };
   },
  
-  created() {
+  created: function() {
+    this.socket.on('get', todo => {
+      this.getTodo();
+    })
+  },
+  mounted() {
     this.getTodo();
   },
  
@@ -63,6 +69,7 @@ export default {
       try {
         const username = localStorage.getItem('usr');
         const password = localStorage.getItem('pwd');
+        this.socket.emit('delete', id);
         await axios.delete(`http://localhost:3000/todo/${id}`,
         { 
           headers: {username, password}

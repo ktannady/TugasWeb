@@ -26,7 +26,8 @@ export default {
   name: "AddProduct",
   data() {
     return {
-      description: "",      
+      description: "",
+      socket: io('http://localhost:3000')    
     };
   },
   methods: {
@@ -34,11 +35,13 @@ export default {
     async addTodo() {
       const username = localStorage.getItem('usr');
       const password = localStorage.getItem('pwd');
+      let newItem = {
+        description: this.description,
+      }
+      this.socket.emit('add', newItem)
       try {
         await axios.post("http://localhost:3000/todo", 
-        {
-          description: this.description,
-        },
+        newItem,
         { 
           headers: {username, password}
         });        

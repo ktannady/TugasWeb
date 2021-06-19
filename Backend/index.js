@@ -135,6 +135,16 @@ app.delete('/user/:id', auth, (req, res, next) =>{
   res.end();
 })
 
-app.listen(port, () => {
+var server = app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`)
+})
+
+const io = require('socket.io')(server, {cors: {origin: "*"}})
+io.on('connection',(socket)=> {
+  socket.on('add', (data) => {
+      socket.broadcast.emit('get', data)
+    })
+  socket.on('delete', (data) => {
+      socket.broadcast.emit('get', data)
+    })
 })
